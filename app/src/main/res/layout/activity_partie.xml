@@ -32,13 +32,14 @@
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:id="@+id/Plateau"
+        app:layout_constrainedWidth="true"
+        app:layout_constrainedHeight="true"
         app:layout_constraintTop_toBottomOf="@id/imageView"
         app:layout_constraintBottom_toTopOf="@id/imageButton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_margin="5dp">
-
-    </FrameLayout>
+        android:layout_margin="5dp"/>
 
     <TextView
         android:id="@+id/textView2"
