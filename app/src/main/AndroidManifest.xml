@@ -9,7 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Demineur">
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".Partie"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="sensor">
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="sensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
