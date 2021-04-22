@@ -49,17 +49,38 @@ public class Grille extends View {
         n = 20;
         m = (int) (n/2.33);
 
+        // On ajoute les cases
         cases = new Case[n][m];
         for(int i=0; i < n; i++){
             for(int j=0; j<m; j++){
                 Case c = new Case();
+                // la case a une probabilité PBombe de d'être une bombe
                 if(Math.random() < PBombe) c.setBombe(true);
                 c.setEtat(OUVERTE);
                 cases[i][j] = c;
             }
         }
 
-        // Pour intéroger l'appareil sur sa rotation
+        // On détermine pour chaque case, combien de bombes il y a dans son voisinage
+        for(int i=0; i < n; i++){
+            for(int j=0; j<m; j++){
+                Case c = cases[i][j];
+                // Cases dans le carré 3x3 centré sur c
+                for(int i2=-1; i2 < 2; i2++){
+                    for (int j2=-1; j2 <2; j2++){
+                        // On s'assure que l'on reste dans les limites de la grille
+                        // et on ignore la cellule centrale (la case actuelle)
+                        if(i+i2 >= 0 && i+i2 < n && j+j2 >=0 && j+j2 < m && !(j2 == 0 && i2==0)){
+                            Case c2 = cases[i+i2][j+j2]; // Case voisine
+                            int nbBombes = c.getNbBombes(); // Nombre actuel de bombes à coté de c
+                            if(c2.getBombe()) c.setNbBombes(nbBombes+1);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Pour intérroger l'appareil sur sa rotation
         display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
     }
 
