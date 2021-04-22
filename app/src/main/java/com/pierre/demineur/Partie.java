@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +24,6 @@ public class Partie extends AppCompatActivity {
     private int nx, ny;
     private FrameLayout plateau;
     private int width, height;
-
     private Display display;
 
 
@@ -41,37 +41,41 @@ public class Partie extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 plateau.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                width = plateau.getMeasuredWidth();
-                height = plateau.getMeasuredHeight();
-                setupGrid();
+                placeButtons();
+                updateGridLayout();
             }
         });
     }
 
-    public void setupGrid(){
+    public void placeButtons(){
         nx = 10;
-        ny = 40;
-        buttonSize = Math.min(width, height) / Math.min(nx, ny);
+        ny = 18;
         grid = new Button[ny][nx];
         for (int i=0; i < ny; i++) {
             for (int j = 0; j < nx; j++) {
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(buttonSize, buttonSize);
                 Button b = new Button(this);
                 grid[i][j] = b;
                 b.setText(Integer.toString(i*nx+j));
-                plateau.addView(b, params);
+                b.setBackgroundColor(Color.BLUE);
+                plateau.addView(b);
             }
         }
-        updateGridLayout();
-        plateau.invalidate();
     }
 
     public void updateGridLayout(){
         int rotation = display.getRotation();
-        Log.d("ROTATION", ""+rotation);
+        if(rotation == Surface.ROTATION_0){
+            width = plateau.getMeasuredWidth();
+            height = plateau.getMeasuredHeight();
+        } else {
+            height = plateau.getMeasuredWidth();
+            width = plateau.getMeasuredHeight();
+        }
+        buttonSize = Math.min(width/nx, height/ny);
         for (int i=0; i < ny; i++) {
             for (int j = 0; j < nx; j++) {
                 Button b = grid[i][j];
+                b.setLayoutParams(new FrameLayout.LayoutParams(buttonSize, buttonSize));
                 if(rotation == Surface.ROTATION_0){
                     b.setX(j*buttonSize);
                     b.setY(i*buttonSize);
@@ -81,5 +85,20 @@ public class Partie extends AppCompatActivity {
                 }
             }
         }
+        plateau.invalidate();
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        ViewTreeObserver vto = plateau.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                plateau.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                updateGridLayout();
+            }
+        });
+        super.onConfigurationChanged(newConfig);
+    }
+
 }
