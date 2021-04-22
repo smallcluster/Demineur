@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.provider.Telephony;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -14,52 +17,82 @@ import static com.pierre.demineur.CaseEtats.*;
 
 /**
  * Plateau du jeu
- * Gère l'affichage, l'interraction avec l'utilisateur et le gameplay
+ * Gère l'affichage, l'interaction avec l'utilisateur et le gameplay
  */
 public class Grille extends View {
+
     // Dimension du plateaux (en nombre de cases)
-    private int n; // nb lignes
-    private int m; // nb colonnes
+    private int n = 0; // nb lignes
+    private int m = 0; // nb colonnes
 
     // Tableau qui contient les cases
     private Case[][] cases;
 
-    // Probabilité pour qu'une case soit une bombe
-    private float PBombe = 0.2f;
-
-
+    // Taille en pixels des cases
     private float tailleCase;
-    private Display display;
+    // Décalage en pixel pour centrer les cases dans la vue
     private float xOffset, yOffset;
+
+    // Pour obtenir la rotation de l'écran
+    private Display display;
+
+    // Permet de passer en mode "placer des drapeaux" au lieu de creuser les cases
+    private boolean modeDrapeau = false;
+
+    // Image du drapeau
+    private Drawable imgDrapeau;
+
+    // Pour communiquer le nombre de drapeaux restants ainsi que si l'on a gragné ou perdu
+    // à l'activité parent
+    private Partie partie;
+
 
     public Grille(Context context) {
         super(context);
-        init(context);
     }
 
     public Grille(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
     }
 
-    public void setPBombe(float p){PBombe = p;}
+    public void setModeDrapeau(boolean b){modeDrapeau = b;}
 
-    private void init(Context context){
+    public void init(Partie partie, float PBombe){
+        // Référence à l'activité partie
+        this.partie = partie;
+
+        // On récup l'image du drapeau
+        imgDrapeau = partie.getDrawable(R.drawable.flag);
+
         // Format adapté pour le 21/9 ème
         n = 20;
         m = (int) (n/2.33);
 
-        // On ajoute les cases
+        // On ajoute les cases et on compte le nombre de bombes placées
         cases = new Case[n][m];
+        int nbBombes = 0;
         for(int i=0; i < n; i++){
             for(int j=0; j<m; j++){
                 Case c = new Case();
+                // On alterne les couleurs pour créer un damier
+                if( (i+j) % 2 == 0){
+                    c.setCouleurOuvert(229, 194, 159);
+                    c.setCouleurFermee(155, 210, 64);
+                } else {
+                    c.setCouleurOuvert(215, 184, 153);
+                    c.setCouleurFermee(147, 202, 57);
+                }
                 // la case a une probabilité PBombe de d'être une bombe
-                if(Math.random() < PBombe) c.setBombe(true);
-                c.setEtat(OUVERTE);
+                if(Math.random() < PBombe){
+                    c.setBombe(true);
+                    nbBombes++;
+                }
                 cases[i][j] = c;
             }
         }
+
+        // Le nombre de drapeaux à placer = le nombre total de bombes
+        partie.setDrapeauxRestants(nbBombes);
 
         // On détermine pour chaque case, combien de bombes il y a dans son voisinage
         for(int i=0; i < n; i++){
@@ -72,22 +105,21 @@ public class Grille extends View {
                         // et on ignore la cellule centrale (la case actuelle)
                         if(i+i2 >= 0 && i+i2 < n && j+j2 >=0 && j+j2 < m && !(j2 == 0 && i2==0)){
                             Case c2 = cases[i+i2][j+j2]; // Case voisine
-                            int nbBombes = c.getNbBombes(); // Nombre actuel de bombes à coté de c
-                            if(c2.getBombe()) c.setNbBombes(nbBombes+1);
+                            if(c2.getBombe()) c.setNbBombes(c.getNbBombes()+1);
                         }
                     }
                 }
             }
         }
-
         // Pour intérroger l'appareil sur sa rotation
-        display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        display = ((WindowManager) partie.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
     }
 
 
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         // On détermine dans quel sens le téléphone se trouve.
         int rotation = display.getRotation();
 
@@ -109,55 +141,18 @@ public class Grille extends View {
         }
 
         Paint paint = new Paint();
-        paint.setTextSize(tailleCase/2);
-        paint.setTextAlign(Paint.Align.CENTER);
-
         for(int i=0; i < n; i++){
             for(int j=0; j < m; j++){
-
                 // Positions de la case en fonction de la rotation de l'écran
                 float x = Surface.ROTATION_0 == rotation ? j*tailleCase+xOffset : i*tailleCase+xOffset;
                 float y = Surface.ROTATION_0 == rotation ? i*tailleCase+yOffset : j*tailleCase+yOffset;
-
                 Case c = cases[i][j];
-
-                switch (c.getEtat()){
-                    case FERMEE:
-                        // On alterne les couleurs pour créer un damier
-                        if( (i+j) % 2 == 0) paint.setColor(Color.rgb(155, 210, 64));
-                        else paint.setColor(Color.rgb(147, 202, 57));
-                        // On dessine la case
-                        canvas.drawRect(x, y, x + tailleCase, y+ tailleCase, paint);
-                        break;
-                    case OUVERTE:
-                        // On alterne les couleurs pour créer un damier
-                        if( (i+j) % 2 == 0) paint.setColor(Color.rgb(229, 194, 159));
-                        else paint.setColor(Color.rgb(215, 184, 153));
-                        // On dessine la case
-                        canvas.drawRect(x, y, x + tailleCase, y+ tailleCase, paint);
-
-                        // Affiche la bombe si il y en a une
-                        if(c.getBombe()){
-                            paint.setColor(Color.BLACK);
-                            canvas.drawCircle(x+tailleCase/2,y+tailleCase/2,tailleCase/4, paint);
-                        }
-                        // Sinon on affiche le nombre de bombes voisines
-                        else {
-                            int nbBombes = c.getNbBombes();
-                            // Si il n'y a pas de bombes voisines on ne surcharge pas le joueur
-                            // d' informations inutiles.
-                            if(nbBombes>0){
-                                if(nbBombes >= 3) paint.setColor(Color.RED);
-                                else if(nbBombes == 2) paint.setColor(Color.GREEN);
-                                else if(nbBombes == 1) paint.setColor(Color.BLUE);
-                                canvas.drawText(Integer.toString(nbBombes), x+tailleCase/2, y+tailleCase/1.5f, paint);
-                            }
-                        }
-                        break;
-                }
+                c.setX(x);
+                c.setY(y);
+                c.setTaille(tailleCase);
+                c.draw(canvas, paint, imgDrapeau);
             }
         }
-        super.onDraw(canvas);
     }
 
     @Override
@@ -189,11 +184,73 @@ public class Grille extends View {
         // On teste maintenant que le joueur a appuyé sur la case
         int action = event.getAction();
         if(action == MotionEvent.ACTION_DOWN){
-            cases[i][j].setNbBombes(cases[i][j].getNbBombes()+1);
+            // En mode drapeau on ajoute ou on retire des drapeaux
+            if(modeDrapeau){
+                int nbDrapeaux = partie.getDrapeauxRestants();
+                // On ne peut que retirer des drapeaux quand le compteur est à 0
+                if( nbDrapeaux == 0 && cases[i][j].getEtat() == DRAPEAU)
+                    partie.setDrapeauxRestants(nbDrapeaux + cases[i][j].toggleDrapeau());
+                else if(nbDrapeaux > 0)
+                    partie.setDrapeauxRestants(nbDrapeaux + cases[i][j].toggleDrapeau());
+            } else
+                creuserCase(i,j);
             // On redessine le plateau
             invalidate();
         }
         return true;
     }
 
+    private void creuserCase(int i, int j){
+        Case c = cases[i][j];
+
+        // On ne peut pas creuser les drapeau
+        if(c.getEtat() == DRAPEAU)
+            return;
+        // C'est une bombe => fin de la partie
+        if(c.getEtat() == FERMEE && c.getBombe()){
+            c.setEtat(OUVERTE);
+            return;
+        }
+
+        // On ouvre la case actuelle
+        c.setEtat(OUVERTE);
+
+        // Si il y a des bombes dans son voisinage, on ne creuse pas en automatique autour d'elle
+        if(c.getNbBombes() > 0)
+            return;
+
+        // C'était une case vide, on creuse en automatique en croix
+        if(i+1 < n) creuserAuto(i+1, j);
+        if(i-1 >= 0) creuserAuto(i-1, j);
+        if(j+1 < m) creuserAuto(i, j+1);
+        if(j-1 >= 0) creuserAuto(i, j-1);
+    }
+
+    private void creuserAuto(int i, int j){
+        Case c = cases[i][j];
+
+        // Cas de base
+        // 1 : Une bombe ne peut être creusée
+        // 2 : Une case fermée avec des bombes dans son voisinage est creusée et on s'arrête
+        // 3 : Une case vide ne peut être crusée
+        // 4 : Un drapeau ne peut être creusé
+        if(c.getBombe())
+            return;
+        else if((c.getEtat() == FERMEE && c.getNbBombes() > 0)){
+            c.setEtat(OUVERTE);
+            return;
+        } else if(c.getEtat() == OUVERTE
+                || c.getEtat() == DRAPEAU || (c.getEtat() == FERMEE && c.getBombe()))
+            return;
+
+        // Cas de récursion
+        // 1 : Case fermée sans bombes dans son voisinage
+        c.setEtat(OUVERTE);
+
+        // On creuse en croix
+        if(i+1 < n) creuserAuto(i+1, j);
+        if(i-1 >= 0) creuserAuto(i-1, j);
+        if(j+1 < m) creuserAuto(i, j+1);
+        if(j-1 >= 0) creuserAuto(i, j-1);
+    }
 }
