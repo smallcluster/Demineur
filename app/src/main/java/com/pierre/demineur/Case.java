@@ -76,9 +76,11 @@ public class Case {
     public float getTaille(){return taille;}
 
     public int toggleDrapeau(){
-        if(etat != OUVERTE)
+        if(etat == OUVERTE) return 0;
+        else {
             etat = etat == DRAPEAU ? FERMEE : DRAPEAU;
-        return etat == DRAPEAU ? -1 : 1;
+            return etat == DRAPEAU ? -1 : 1;
+        }
     }
 
     public void setCouleurFermee(int r, int g, int b){
