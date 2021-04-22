@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,7 +30,7 @@ public class Grille extends View {
 
     private float tailleCase;
     private Display display;
-    private int rotation;
+    private float xOffset, yOffset;
 
     public Grille(Context context) {
         super(context);
@@ -60,17 +61,14 @@ public class Grille extends View {
 
         // Pour intéroger l'appareil sur sa rotation
         display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        // On détermine dans quel sens le téléphone se trouve.
-        rotation = display.getRotation();
     }
+
+
 
     @Override
     protected void onDraw(Canvas canvas) {
-        float xOffset;
-        float yOffset;
-
         // On détermine dans quel sens le téléphone se trouve.
-        rotation = display.getRotation();
+        int rotation = display.getRotation();
 
         // On lit les dimensions de la view qui sont déterminées par les contraintes de
         // l'activité Partie
@@ -127,11 +125,10 @@ public class Grille extends View {
                             int nbBombes = c.getNbBombes();
                             // Si il n'y a pas de bombes voisines on ne surcharge pas le joueur
                             // d' informations inutiles.
-                            if(nbBombes>=0){
+                            if(nbBombes>0){
                                 if(nbBombes >= 3) paint.setColor(Color.RED);
                                 else if(nbBombes == 2) paint.setColor(Color.GREEN);
                                 else if(nbBombes == 1) paint.setColor(Color.BLUE);
-                                else paint.setColor(Color.CYAN);
                                 canvas.drawText(Integer.toString(nbBombes), x+tailleCase/2, y+tailleCase/1.5f, paint);
                             }
                         }
@@ -141,4 +138,41 @@ public class Grille extends View {
         }
         super.onDraw(canvas);
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);   // this super call is important !!!
+
+        // Coordonnées du pointeur
+        float mx = event.getX();
+        float my = event.getY();
+
+        // En mode landscape (rotation != 0) on prend la transposée de la grille
+        // c'est à dire on inverse n et m
+        int rotation = display.getRotation();
+        int tm = Surface.ROTATION_0 != rotation ? n : m;
+        int tn = Surface.ROTATION_0 != rotation ? m : n;
+
+        // Le pointeur doit être dans la zone de dessin de la grille si non on ne fait rien
+        // On prend en compte la transposée si besoin
+        if(mx < xOffset || mx > xOffset+tailleCase*tm || my < yOffset || my > yOffset+tailleCase*tn)
+            return true;
+
+        // On recup les coordonnées de la case dans la grille en fonction de la rotation
+        // En mode landscape (rotation != 0) on prend la transposée
+        int j = (int) ((mx - xOffset) / tailleCase);
+        int i = (int) ((my - yOffset) / tailleCase);
+        // On permute i et j si besoin
+        if(Surface.ROTATION_0 != rotation){ int tmp=i; i=j; j=tmp;}
+
+        // On teste maintenant que le joueur a appuyé sur la case
+        int action = event.getAction();
+        if(action == MotionEvent.ACTION_DOWN){
+            cases[i][j].setNbBombes(cases[i][j].getNbBombes()+1);
+            // On redessine le plateau
+            invalidate();
+        }
+        return true;
+    }
+
 }
