@@ -13,32 +13,66 @@ import android.widget.TextView;
 
 public class Partie extends AppCompatActivity {
 
-    Grille grille;
-    Switch sDrapeau;
-    TextView textDrapeaux;
-    int drapeauxRestants;
+    private Grille grille;
+    private Switch sDrapeau;
+    private TextView texteDrapeaux, texteFin, texteScore;
+    private ConstraintLayout finPartieLayout;
+
+    private float PBombe = 0.1f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_partie);
-        ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
+
         grille = findViewById(R.id.grille);
         sDrapeau = findViewById(R.id.switchDrapeau);
-        textDrapeaux = findViewById(R.id.textDrapeaux);
+        texteDrapeaux = findViewById(R.id.textDrapeaux);
+
+        finPartieLayout = findViewById(R.id.finPArtie);
+        texteFin = findViewById(R.id.texteFin);
+        texteScore = findViewById(R.id.texteScore);
+        finPartieLayout.setVisibility(View.GONE);
 
         // On initialise la vue du jeu
-        grille.init(this, 0.2f);
+        grille.init(this, PBombe);
+
     }
+
+
 
     public void toggleDrapeau(View v){
         grille.setModeDrapeau(sDrapeau.isChecked());
     }
+    public void setDrapeauxRestants(int v){ texteDrapeaux.setText(Integer.toString(v)); }
 
-    public int getDrapeauxRestants(){return drapeauxRestants;}
-    public void setDrapeauxRestants(int v){
-        drapeauxRestants = v;
-        textDrapeaux.setText(Integer.toString(drapeauxRestants));
+    public void perdu(){
+        finPartieLayout.setVisibility(View.VISIBLE);
+        texteFin.setText("PERDU");
+        texteScore.setText("Score : " + Integer.toString(grille.getScore())+"%");
+    }
+
+    public void gagne(){
+        finPartieLayout.setVisibility(View.VISIBLE);
+        texteFin.setText("GANGÉ");
+        texteScore.setText("Score : 100%");
+    }
+
+    public void rejouer(View v){
+        finPartieLayout.setVisibility(View.GONE);
+        grille.init(this, PBombe);
+    }
+
+    public void quitter(View v){
+        super.onBackPressed();
+    }
+
+    public void setDifficulte(int d){
+        switch (d){
+            case 0: PBombe = 0.1f; break;
+            case 1: PBombe = 0.2f; break;
+            case 2: PBombe = 0.3f; break;
+        }
     }
 
 }
