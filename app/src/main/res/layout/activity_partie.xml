@@ -5,11 +5,10 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#93d4ff"
     tools:context=".Partie">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageViewFlagSwitch"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="5dp"
@@ -17,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="@id/switchDrapeau"
         app:layout_constraintLeft_toRightOf="@id/switchDrapeau"
         app:layout_constraintTop_toTopOf="@id/switchDrapeau"
-        app:srcCompat="@drawable/flag" />
+        app:srcCompat="@drawable/flag_disabled" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -25,10 +24,10 @@
         android:layout_height="30dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/flag" />
+        app:srcCompat="@drawable/flag"
+        android:layout_marginRight="20dp"/>
 
     <TextView
         android:id="@+id/textDrapeaux"
@@ -39,15 +38,27 @@
         android:textColor="#ff0000"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintRight_toLeftOf="@id/imageView"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/textHorloge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="00:00"
+        android:textColor="#ebb43d"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+        app:layout_constraintLeft_toRightOf="@id/imageView4"
+        app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
     <com.pierre.demineur.Grille
         android:id="@+id/grille"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
-        app:layout_constraintBottom_toTopOf="@id/imageView2"
+        app:layout_constraintBottom_toTopOf="@id/imageViewFlagSwitch"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
@@ -123,5 +134,15 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/texteScore" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintBottom_toTopOf="@id/grille"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/horloge"
+        android:layout_marginLeft="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

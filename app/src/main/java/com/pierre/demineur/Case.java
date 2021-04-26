@@ -44,7 +44,7 @@ public class Case {
         canvas.drawRect(x, y, x+taille, y+taille, paint);
 
         if(etat == OUVERTE && bombe){
-            drawImg(canvas, imgBombe, 0.85f);
+            drawImg(canvas, imgBombe, 0.80f);
         } else if(etat == OUVERTE && nbBombes > 0){
             paint.setTextSize(taille/2);
             paint.setTextAlign(Paint.Align.CENTER);

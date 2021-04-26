@@ -4,14 +4,14 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <stroke android:width="1dp" android:color="#64bc00" />
+                    <stroke android:width="1dp" android:color="@android:color/darker_gray" />
                     <corners android:bottomRightRadius="12dp" android:topRightRadius="12dp" />
                 </shape>
             </item>
 
             <item android:bottom="1dp" android:right="1dp" android:top="1dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="#64bc00" />
+                    <solid android:color="#88d442" />
                     <corners android:bottomRightRadius="12dp" android:topRightRadius="12dp" />
                 </shape>
             </item>
@@ -21,14 +21,14 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <stroke android:width="1dp" android:color="#64bc00" />
+                    <stroke android:width="1dp" android:color="@android:color/darker_gray" />
                     <corners android:bottomRightRadius="12dp" android:topRightRadius="12dp" />
                 </shape>
             </item>
 
             <item android:bottom="1dp" android:right="1dp" android:top="1dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="#64bc00" />
+                    <solid android:color="#88d442" />
                     <corners android:bottomRightRadius="12dp" android:topRightRadius="12dp" />
                 </shape>
             </item>
@@ -38,13 +38,13 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <stroke android:width="1dp" android:color="#64bc00" />
+                    <stroke android:width="1dp" android:color="@android:color/darker_gray" />
                     <corners android:bottomRightRadius="12dp" android:topRightRadius="12dp" />
                 </shape>
             </item>
             <item android:bottom="1dp" android:right="1dp" android:top="1dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="@android:color/white" />
+                    <solid android:color="@android:color/darker_gray" />
                     <corners android:bottomRightRadius="12dp" android:topRightRadius="12dp" />
                 </shape>
             </item>
