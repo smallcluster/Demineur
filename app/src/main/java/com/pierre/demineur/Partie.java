@@ -3,6 +3,7 @@ package com.pierre.demineur;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,11 +20,30 @@ public class Partie extends AppCompatActivity {
     private ConstraintLayout finPartieLayout;
 
     private float PBombe = 0.1f;
+    private int n = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_partie);
+
+
+        Intent intent = getIntent();
+        int level = intent.getIntExtra("level", 0);
+        switch (level){
+            case 0:
+                PBombe = 0.1f;
+                n = 10;
+                break;
+            case 1:
+                PBombe = 0.13f;
+                n = 15;
+                break;
+            case 2:
+                PBombe = 0.15f;
+                n = 20;
+                break;
+        }
 
         grille = findViewById(R.id.grille);
         sDrapeau = findViewById(R.id.switchDrapeau);
@@ -35,7 +55,7 @@ public class Partie extends AppCompatActivity {
         finPartieLayout.setVisibility(View.GONE);
 
         // On initialise la vue du jeu
-        grille.init(this, PBombe);
+        grille.init(this, PBombe, n);
 
     }
 
@@ -60,19 +80,10 @@ public class Partie extends AppCompatActivity {
 
     public void rejouer(View v){
         finPartieLayout.setVisibility(View.GONE);
-        grille.init(this, PBombe);
+        grille.init(this, PBombe, n);
     }
 
     public void quitter(View v){
         super.onBackPressed();
     }
-
-    public void setDifficulte(int d){
-        switch (d){
-            case 0: PBombe = 0.1f; break;
-            case 1: PBombe = 0.2f; break;
-            case 2: PBombe = 0.3f; break;
-        }
-    }
-
 }

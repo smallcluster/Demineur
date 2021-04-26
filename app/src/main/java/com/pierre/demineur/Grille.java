@@ -60,6 +60,8 @@ public class Grille extends View {
 
     // Image du drapeau
     private Drawable imgDrapeau;
+    // Image des bombes
+    private Drawable imgBombe;
 
     // Pour communiquer le nombre de drapeaux restants ainsi que si l'on a gragné ou perdu
     // à l'activité parent
@@ -80,19 +82,20 @@ public class Grille extends View {
     // Initialise/Re-initialise le jeu
     // Doit être appelé manuellement après instanciation pour s'assurer que l'activité parent
     // est finie de s'initialiser
-    public void init(Partie partie, float PBombe){
+    public void init(Partie partie, float PBombe, int n){
 
         // Pour intérroger l'appareil sur sa rotation
         display = ((WindowManager) partie.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         // On récup l'image du drapeau
         imgDrapeau = partie.getDrawable(R.drawable.flag);
+        imgBombe = partie.getDrawable(R.drawable.mine);
 
         // Référence à l'activité partie
         this.partie = partie;
         modeDrapeau = false;
         partieTermine = false;
         // Format adapté pour le 21/9 ème
-        n = 20;
+        this.n = n;
         m = (int) (n/2.33);
 
         // Calcul du nombre de bombes en fonction du pourcentage
@@ -194,7 +197,7 @@ public class Grille extends View {
                 c.setX(x);
                 c.setY(y);
                 c.setTaille(tailleCase);
-                c.draw(canvas, paint, imgDrapeau);
+                c.draw(canvas, paint, imgDrapeau, imgBombe);
             }
         }
     }

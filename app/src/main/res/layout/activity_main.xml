@@ -4,55 +4,121 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#93d4ff"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/titre"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Super DEMINEUR"
-        android:textSize="36sp"
-        android:layout_marginVertical="20dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonJouer"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintBottom_toBottomOf="@id/titre"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/titre"
+            app:srcCompat="@drawable/mine" />
+
+        <TextView
+            android:id="@+id/titre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:text="SUPER\n DEMINEUR"
+            android:textColor="@color/black"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/imageView3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/buttonJouer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#1a8736"
+        android:onClick="jouer"
         android:text="Jouer"
-        app:layout_constraintTop_toBottomOf="@id/titre"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:onClick="jouer"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="#1a8736"
         android:text="Scores"
-        app:layout_constraintTop_toBottomOf="@id/level"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
-    <SeekBar
-        android:id="@+id/level"
-        android:layout_width="0dp"
+    <RadioGroup
+        android:id="@+id/levelSelector"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/buttonJouer"
-        app:layout_constraintLeft_toRightOf="@id/levelText"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonScore"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginHorizontal="20dp"/>
+        app:layout_constraintTop_toBottomOf="@id/buttonJouer">
 
-    <TextView
-        android:id="@+id/levelText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Facile"
-        app:layout_constraintTop_toTopOf="@id/level"
-        app:layout_constraintBottom_toBottomOf="@id/level"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="20dp"/>
+        <RadioButton
+            android:id="@+id/humanRadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_segmented_left"
+            android:button="@android:color/transparent"
+            android:checked="false"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="0"
+            android:text="Facile"
+            android:textColor="@drawable/txt_segmented"
+            android:textSize="24sp" />
+
+        <RadioButton
+            android:id="@+id/elfRadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_segmented_center"
+            android:button="@android:color/transparent"
+            android:checked="true"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="1"
+            android:text="Moyen"
+            android:textColor="@drawable/txt_segmented"
+            android:textSize="24sp" />
+
+        <RadioButton
+            android:id="@+id/hobbitRadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_segmented_right"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tag="2"
+            android:text="Difficile"
+            android:textColor="@drawable/txt_segmented"
+            android:textSize="24sp" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

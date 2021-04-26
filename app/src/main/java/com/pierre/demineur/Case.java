@@ -39,33 +39,50 @@ public class Case {
         nbBombes = 0;
     }
 
-    public void draw(Canvas canvas, Paint paint, Drawable imgDrapeau){
+    public void draw(Canvas canvas, Paint paint, Drawable imgDrapeau, Drawable imgBombe){
         paint.setColor(etat == OUVERTE ? couleurOuverte : couleurFermee);
         canvas.drawRect(x, y, x+taille, y+taille, paint);
+
         if(etat == OUVERTE && bombe){
-            paint.setColor(Color.BLACK);
-            canvas.drawCircle(x+taille/2,y+taille/2,taille/4, paint);
+            drawImg(canvas, imgBombe, 0.85f);
         } else if(etat == OUVERTE && nbBombes > 0){
             paint.setTextSize(taille/2);
             paint.setTextAlign(Paint.Align.CENTER);
-            if(nbBombes == 2) paint.setColor(Color.GREEN);
+            if(nbBombes == 2) paint.setColor(Color.rgb(0, 200, 0));
             else if(nbBombes == 1) paint.setColor(Color.BLUE);
             else paint.setColor(Color.RED);
             canvas.drawText(Integer.toString(nbBombes), x+taille/2, y+taille/1.5f, paint);
         } else if(etat == DRAPEAU){
-            int width = imgDrapeau.getIntrinsicWidth();
-            int height = imgDrapeau.getIntrinsicHeight();
-
-            if(width < height){
-                float scale = (float)width/ (float) height;
-                imgDrapeau.setBounds((int)x, (int)y, (int) (x+taille*scale), (int)(y+taille));
-            } else {
-                float scale = (float )height/ (float) width;
-                imgDrapeau.setBounds((int)x, (int)y, (int) (x+taille), (int)(y+taille*scale));
-            }
-            imgDrapeau.draw(canvas);
+            drawImg(canvas, imgDrapeau, 0.85f);
         }
     }
+
+    private void drawImg(Canvas canvas, Drawable img, float scale){
+
+        int imgWidth = img.getIntrinsicWidth();
+        int imgHeight = img.getIntrinsicHeight();
+
+        float targetWidth, targetHeight;
+
+        // On conserve le ratio de l'image
+        if(imgWidth < imgHeight){
+            float ratio = (float) imgWidth/(float)imgHeight;
+            targetWidth = taille*scale*ratio;
+            targetHeight = taille*scale;
+        } else {
+            float ratio = (float )imgHeight/ (float) imgHeight;
+            targetWidth = taille*scale;
+            targetHeight = taille*scale*ratio;
+        }
+
+        float xOffset = (taille-targetWidth) / 2.0f;
+        float yOffset = (taille-targetHeight) / 2.0f;
+
+        img.setBounds((int) (x+xOffset), (int) (y+yOffset), (int) (x+xOffset+targetWidth), (int)(y+yOffset+targetHeight));
+
+        img.draw(canvas);
+    }
+
 
     public void setX(float x){this.x = x;}
     public void setY(float y){this.y = y;}
