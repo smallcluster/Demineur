@@ -9,6 +9,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -57,7 +58,17 @@ public class Partie extends AppCompatActivity {
 
         grille = findViewById(R.id.grille);
         sDrapeau = findViewById(R.id.switchDrapeau);
+
+
         texteDrapeaux = findViewById(R.id.textDrapeaux);
+
+        sDrapeau.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                toggleDrapeau(sDrapeau);
+            }
+        });
+
         imageViewFlagSwitch = findViewById(R.id.imageViewFlagSwitch);
 
         finPartieLayout = findViewById(R.id.finPArtie);
@@ -66,9 +77,6 @@ public class Partie extends AppCompatActivity {
         finPartieLayout.setVisibility(View.GONE);
 
         textHorloge = findViewById(R.id.textHorloge);
-
-
-
 
         // On initialise la vue du jeu
         grille.init(this, PBombe, n);
@@ -95,7 +103,7 @@ public class Partie extends AppCompatActivity {
 
     public void gagne(){
         finPartieLayout.setVisibility(View.VISIBLE);
-        texteFin.setText("GANGÉ");
+        texteFin.setText("GAGNÉ");
         texteScore.setText("Score : 100%");
         stopperTimer();
     }
@@ -103,6 +111,9 @@ public class Partie extends AppCompatActivity {
     public void rejouer(View v){
         finPartieLayout.setVisibility(View.GONE);
         lancerTimer();
+        sDrapeau.setChecked(false);
+        grille.setModeDrapeau(false);
+        imageViewFlagSwitch.setImageDrawable(getDrawable(R.drawable.flag_disabled));
         grille.init(this, PBombe, n);
     }
 
