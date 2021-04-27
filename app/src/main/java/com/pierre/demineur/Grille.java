@@ -2,12 +2,9 @@ package com.pierre.demineur;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.provider.Telephony;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -15,7 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -65,7 +61,7 @@ public class Grille extends View {
 
     // Pour communiquer le nombre de drapeaux restants ainsi que si l'on a gragné ou perdu
     // à l'activité parent
-    private Partie partie;
+    private PartieActivity partieActivity;
 
 
     public Grille(Context context) {
@@ -82,16 +78,16 @@ public class Grille extends View {
     // Initialise/Re-initialise le jeu
     // Doit être appelé manuellement après instanciation pour s'assurer que l'activité parent
     // est finie de s'initialiser
-    public void init(Partie partie, float PBombe, int n){
+    public void init(PartieActivity partieActivity, float PBombe, int n){
 
         // Pour intérroger l'appareil sur sa rotation
-        display = ((WindowManager) partie.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        display = ((WindowManager) partieActivity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         // On récup l'image du drapeau
-        imgDrapeau = partie.getDrawable(R.drawable.flag);
-        imgBombe = partie.getDrawable(R.drawable.mine);
+        imgDrapeau = partieActivity.getDrawable(R.drawable.flag);
+        imgBombe = partieActivity.getDrawable(R.drawable.mine);
 
         // Référence à l'activité partie
-        this.partie = partie;
+        this.partieActivity = partieActivity;
         modeDrapeau = false;
         partieTermine = false;
         // Format adapté pour le 21/9 ème
@@ -106,7 +102,7 @@ public class Grille extends View {
 
         // Le nombre de drapeaux à placer = le nombre total de bombes
         drapeauxRestants = nbBombes;
-        partie.setDrapeauxRestants(drapeauxRestants);
+        partieActivity.setDrapeauxRestants(drapeauxRestants);
 
         // Liste aléatoire de boolean contenant nbBombes true
 
@@ -321,19 +317,19 @@ public class Grille extends View {
             drapeauxRestants += cases[i][j].toggleDrapeau();
 
         // On actualise l'affichage de l'activitée
-        partie.setDrapeauxRestants(drapeauxRestants);
+        partieActivity.setDrapeauxRestants(drapeauxRestants);
     }
 
     private void perdu(){
         partieTermine = true;
         revelerCases();
-        partie.perdu();
+        partieActivity.perdu();
     }
 
     private void gagne(){
         partieTermine = true;
         revelerCases();
-        partie.gagne();
+        partieActivity.gagne();
     }
 
     public int getScore(){

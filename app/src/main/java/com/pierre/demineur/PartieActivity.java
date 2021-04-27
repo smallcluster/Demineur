@@ -14,11 +14,15 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class Partie extends AppCompatActivity {
+public class PartieActivity extends AppCompatActivity {
 
     private Grille grille;
     private Switch sDrapeau;
@@ -33,6 +37,8 @@ public class Partie extends AppCompatActivity {
     private long timeInSec = 0;
     private TextView textHorloge;
 
+    private int level;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +46,7 @@ public class Partie extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        int level = intent.getIntExtra("level", 0);
+        level = intent.getIntExtra("level", 0);
         switch (level){
             case 0:
                 PBombe = 0.1f;
@@ -95,6 +101,7 @@ public class Partie extends AppCompatActivity {
     public void setDrapeauxRestants(int v){ texteDrapeaux.setText(Integer.toString(v)); }
 
     public void perdu(){
+        saveCurrentStat();
         finPartieLayout.setVisibility(View.VISIBLE);
         texteFin.setText("PERDU");
         texteScore.setText("Score : " + Integer.toString(grille.getScore())+"%");
@@ -102,10 +109,22 @@ public class Partie extends AppCompatActivity {
     }
 
     public void gagne(){
+        saveCurrentStat();
         finPartieLayout.setVisibility(View.VISIBLE);
         texteFin.setText("GAGNÉ");
         texteScore.setText("Score : 100%");
         stopperTimer();
+    }
+
+    private void saveCurrentStat(){
+
+        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        String score = Integer.toString(grille.getScore())+"%";
+        String temps = String.format("%02d:%02d", timeInSec/60, timeInSec % 60);
+        String difficulte = Integer.toString(level);
+        String data = currentDate+";"+score+";"+temps+";"+difficulte;
+
+        MainActivity.stats.add(0, data);
     }
 
     public void rejouer(View v){

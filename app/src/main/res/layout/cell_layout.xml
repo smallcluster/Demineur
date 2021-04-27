@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+
+
+    <TextView
+        android:id="@+id/textDate"
+        android:textAlignment="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.33"
+        android:text="DATE" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="5dp"
+        android:background="@color/gray_400" />
+
+    <TextView
+        android:id="@+id/textScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SCORE %"
+        android:textAlignment="center"
+        android:layout_weight="0.33"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="5dp"
+        android:background="@color/gray_400" />
+
+    <TextView
+        android:id="@+id/textTemps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TEMPS"
+        android:textAlignment="center"
+        android:layout_weight="0.33"/>
+</LinearLayout>
