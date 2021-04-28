@@ -12,11 +12,18 @@ import java.util.List;
 
 public class ScoresActivity extends AppCompatActivity {
 
+    // Liste des statistiques
     private ArrayList<String> stats;
-
+    // view avec des catégories pour afficher les stats sous forme de liste
     private ExpandableListView expandableListView;
+
+    // List des catégories
     private List<String> listGroup;
+
+    // listes des items par catégorie
     private HashMap<String, List<String>> listItem;
+
+    // Gestionnaire pour gérer expandableListView
     private MainAdapter mainAdapter;
 
     @Override
@@ -34,7 +41,7 @@ public class ScoresActivity extends AppCompatActivity {
         Intent intent = getIntent();
         stats = intent.getStringArrayListExtra("array");
 
-        // On ajoutes les catégories
+        // On ajoute les catégories
         listGroup.add("Facile");
         listGroup.add("Moyen");
         listGroup.add("Difficile");
@@ -56,8 +63,9 @@ public class ScoresActivity extends AppCompatActivity {
         listItem.put(listGroup.get(1), listMoyen);
         listItem.put(listGroup.get(2), listDifficile);
 
-
+        // Création du gestionnaire
         mainAdapter = new MainAdapter(this, listGroup, listItem);
+        // On assigne le gestionnaire à la liste view
         expandableListView.setAdapter(mainAdapter);
     }
 }

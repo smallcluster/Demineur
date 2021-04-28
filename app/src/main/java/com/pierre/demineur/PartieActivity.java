@@ -145,6 +145,7 @@ public class PartieActivity extends AppCompatActivity {
         String difficulte = Integer.toString(level);
         String data = currentDate+";"+score+";"+temps+";"+difficulte;
 
+        // On ajoute au début pour garder les stats triées par date, la plus récente en haut
         MainActivity.stats.add(0, data);
     }
 
