@@ -104,7 +104,7 @@ public class PartieActivity extends AppCompatActivity {
         saveCurrentStat();
         finPartieLayout.setVisibility(View.VISIBLE);
         texteFin.setText("PERDU");
-        texteScore.setText("Score : " + Integer.toString(grille.getScore())+"%");
+        texteScore.setText("Score : " + Integer.toString(grille.getScore())+" %");
         stopperTimer();
     }
 
