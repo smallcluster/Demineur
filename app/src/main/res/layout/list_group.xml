@@ -11,8 +11,9 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#FF0000"
+        android:textColor="#1a8736"
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
+        android:text="Difficulté"
         />
 
 </LinearLayout>

@@ -323,19 +323,22 @@ public class Grille extends View {
     private void perdu(){
         partieTermine = true;
         revelerCases();
-        partieActivity.perdu();
+        partieActivity.perdu(); // on indique à la partie qu'on a perdu
     }
+
 
     private void gagne(){
         partieTermine = true;
         revelerCases();
-        partieActivity.gagne();
+        partieActivity.gagne();// on indique à la partie qu'on a gagné
     }
 
+    // Calcul du score
     public int getScore(){
         return (100*nbCasesOuvertes)/(nbCasesVides);
     }
 
+    // Affiche le contenu de toutes les cases
     private void revelerCases(){
         for(int i=0; i < n; i++){
             for(int j=0; j < m; j++){
