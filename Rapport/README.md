@@ -1,4 +1,4 @@
-Pour compiler la source tex il faut:
+Pour compiler la source tex il faut impérativement:
 - le package "pdfescape"
 - l' option de compilation "--shell-esacpe" 
 - Python 3 avec la package "Pygments" (https://pypi.org/project/Pygments/)
